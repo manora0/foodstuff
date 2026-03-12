@@ -1,0 +1,51 @@
+# C/C++ artifacts
+*.d
+*.slo
+*.lo
+*.o
+*.obj
+*.gch
+*.pch
+*.ilk
+*.pdb
+*.so
+*.dylib
+*.dll
+*.mod
+*.smod
+*.lai
+*.la
+*.a
+*.lib
+*.exe
+*.out
+*.app
+*.dwo
+
+# CMake
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake-build*/
+
+# Node / React
+node_modules/
+.pnp
+.pnp.js
+coverage/
+build/
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Misc
+.DS_Store
