@@ -4,7 +4,6 @@ project(server)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(OPENSSL_ROOT_DIR "C:/msys64/mingw64")
 add_definitions(-D_WIN32_WINNT=0x0A00)
 
 add_executable(server src/main.cpp)
@@ -15,7 +14,11 @@ find_package(OpenSSL REQUIRED)
 
 target_compile_definitions(server PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT)
 
+find_library(SODIUM_LIB sodium REQUIRED)
+find_library(SQLITE3_LIB sqlite3 REQUIRED)
 
-if (WIN32)
-    target_link_libraries(server PRIVATE ws2_32 crypt32 OpenSSL::SSL OpenSSL::Crypto)
+if(WIN32)
+  target_link_libraries(server PRIVATE ws2_32 crypt32 OpenSSL::SSL OpenSSL::Crypto ${SQLITE3_LIB} ${SODIUM_LIB})
+else()
+  target_link_libraries(server PRIVATE OpenSSL::SSL OpenSSL::Crypto ${SQLITE3_LIB} ${SODIUM_LIB})
 endif()

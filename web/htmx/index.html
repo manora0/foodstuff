@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
+    integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
+    crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Title</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <h1>Hello, World!</h1>
+  <div hx-post="/mouse_enter" hx-trigger="mouseenter, mouseleave" hx-swap="outerHTML">
+    [Here Mouse, Mouse!]
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>

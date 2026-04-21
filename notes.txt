@@ -1,0 +1,4 @@
+server - cpphttplib nginx
+database - sqlite
+frontend - htmx alpine.js pico.css
+
