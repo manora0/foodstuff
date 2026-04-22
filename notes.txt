@@ -2,3 +2,21 @@ server - cpphttplib nginx
 database - sqlite
 frontend - htmx alpine.js pico.css
 
+need openssl keys
+
+still need to do 
+- [ ] display all meal plans a user has
+- [ ] display all liked meals a user has
+- [ ] create/ delete a meal plans
+- [ ] add to/ remove from a meal plan
+- [ ] add to/ remove from liked meals
+- [ ] generate grocery list from meal plan
+- [ ] user sessions and cookies
+- [ ] encrypt passwords
+- [ ] login / signup page
+- [ ] fuzzy search meals
+- [ ] make pretty
+
+done 
+- [X] display meal info 
+- [X] search by tag
