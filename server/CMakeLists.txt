@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_definitions(-D_WIN32_WINNT=0x0A00)
 
-add_executable(server src/main.cpp)
+add_executable(server src/main.cpp src/routes/user.cpp src/routes/auth.cpp src/routes/recipes.cpp)
 
 target_include_directories(server PRIVATE include)
 

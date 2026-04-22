@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe</title>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div class="max-w-2xl mx-auto px-4 py-10">
+    <a href="/" class="text-sm text-blue-500 hover:underline mb-6 inline-block">&larr; Back</a>
+    <div id="recipe-content" class="text-gray-400">Loading...</div>
+  </div>
+
+  <script>
+    const id = new URLSearchParams(window.location.search).get("id");
+    if (id) {
+      htmx.ajax("GET", "/recipe-detail?id=" + id, {target: "#recipe-content", swap: "innerHTML"});
+    } else {
+      document.getElementById("recipe-content").textContent = "No recipe ID provided.";
+    }
+  </script>
+</body>
+</html>

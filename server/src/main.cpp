@@ -108,6 +108,7 @@ int main(void) {
   svr.set_mount_point("/", "../../web/htmx");
 
   register_user_routes(svr, db);
+  register_recipe_routes(svr, db);
 
   svr.Post("/login", [db](const httplib::Request& req, httplib::Response& res) { // currently allows typing username and password in url for testing, should be changed to form submission in the future
     std::string username = req.get_param_value("username");
@@ -177,7 +178,7 @@ int main(void) {
 
     sqlite3_stmt* stmt;
     sqlite3_prepare_v2(db,
-      "SELECT r.title FROM recipe r "
+      "SELECT r.title, r.recipe_id FROM recipe r "
       "JOIN recipe_keywords rk ON r.recipe_id = rk.recipe_id "
       "WHERE rk.keyword_id = ? ORDER BY r.title",
       -1, &stmt, nullptr);
@@ -186,7 +187,8 @@ int main(void) {
     std::string html;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
       std::string title = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-      html += "<li>" + title + "</li>\n";
+      std::string recipe_id = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+      html += "<li><a href=\"recipe.html?id=" + recipe_id + "\" target=\"_blank\">" + title + "</a></li>\n";
     }
     sqlite3_finalize(stmt);
     res.set_content(html, "text/html");

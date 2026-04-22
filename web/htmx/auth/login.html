@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <!-- <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f5f5f0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 1.5rem;
+        }
+
+        .field {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 0.4rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input:focus {
+            border-color: #888;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.65rem;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background: #444;
+        }
+
+        .error {
+            color: #c0392b;
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            text-align: center;
+        }
+
+        .divider {
+            text-align: center;
+            color: #aaa;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+
+        .register-link {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .register-link a {
+            color: #222;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .htmx-indicator {
+            display: none;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+
+        .htmx-request .htmx-indicator {
+            display: block;
+        }
+    </style> -->
+</head>
+<body>
+
+<div class="card" x-data="{ showPassword: false }">
+    <h1>Welcome back</h1>
+    <p class="subtitle">Sign in to your account</p>
+
+    <form hx-post="/login"
+          hx-target="#error"
+          hx-swap="innerHTML">
+
+        <div class="field">
+            <label for="username">Username</label>
+            <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                placeholder="your username"
+                required
+            />
+        </div>
+
+        <div class="field">
+            <label for="password">Password</label>
+            <input 
+                :type="showPassword ? 'text' : 'password'"
+                id="password" 
+                name="password" 
+                placeholder="••••••••"
+                required
+            />
+            <div style="text-align:right; margin-top: 0.3rem;">
+                <span 
+                    @click="showPassword = !showPassword"
+                    style="font-size:0.8rem; color:#888; cursor:pointer;"
+                    x-text="showPassword ? 'hide' : 'show'">
+                </span>
+            </div>
+        </div>
+
+        <button type="submit">Sign in</button>
+
+        <div class="htmx-indicator">Signing in...</div>
+        <div id="error" class="error"></div>
+    </form>
+
+    <div class="divider">or</div>
+
+    <div class="register-link">
+        Don't have an account? 
+        <a href="/register">Sign up</a>
+    </div>
+</div>
+
+</body>
+</html>
