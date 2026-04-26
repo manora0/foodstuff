@@ -20,3 +20,4 @@ still need to do
 done 
 - [X] display meal info 
 - [X] search by tag
+- [X] something is working
