@@ -36,5 +36,18 @@ void register_user_routes(httplib::Server& svr, sqlite3* db) {
       sqlite3_finalize(stmt);
   });
   
+  svr.Post("/create-plan", [db](const httplib::Request& req, httplib::Response& res) {
+    if (!req.has_param("plan-name")) { res.status = 400; return; }
+    std::string plan_name = req.get_param_value("plan-name");
+    int user_id = 1; // For demo purposes, we use a fixed user_id
+    std::string meal_name = plan_name.empty() ? "My Meal Plan" : plan_name;
+
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(db, "INSERT INTO mealplan (user_id, name) VALUES (?, ?)", -1, &stmt, nullptr);
+    sqlite3_bind_int(stmt, 1, user_id);
+    sqlite3_bind_text(stmt, 2, meal_name.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+  });
   
 }

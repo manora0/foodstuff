@@ -8,5 +8,12 @@
 </head>
 <body>
     <h1>Profile</h1>
-    <div id="profile-data" hx-get="/user-data?id=1" hx-trigger="load" hx-swap="innerHTML"></div>
+    <div id="plan-creation">
+        <h2>Create a new plan</h2>
+        <form hx-post="/create-plan" hx-target="#plan-data" hx-swap="innerHTML">
+            <input type="text" name="plan-name" placeholder="Plan Name" required>
+            <button type="submit">Create Plan</button>
+        </form>
+    </div>
+    <div id="plan-data" hx-get="/user-data?id=1" hx-trigger="load" hx-swap="innerHTML"></div>
 </body>
