@@ -9,8 +9,20 @@
 </head>
 <body class="bg-gray-50 min-h-screen">
   <div class="max-w-2xl mx-auto px-4 py-10">
-    <a href="/" class="text-sm text-blue-500 hover:underline mb-6 inline-block">&larr; Back</a>
+    <a href="/recipe/tags.html" class="text-sm text-blue-500 hover:underline mb-6 inline-block">&larr; Back</a>
     <div id="recipe-content" class="text-gray-400">Loading...</div>
+  </div>
+
+  <!-- Meal plan modal -->
+  <div id="mealplan-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-xl p-6 w-80">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-gray-800">Add to Meal Plan</h2>
+        <button onclick="document.getElementById('mealplan-modal').classList.add('hidden')"
+                class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+      </div>
+      <div id="mealplan-list" class="space-y-2 text-gray-600">Loading...</div>
+    </div>
   </div>
 
   <script>
@@ -19,6 +31,11 @@
       htmx.ajax("GET", "/recipe-detail?id=" + id, {target: "#recipe-content", swap: "innerHTML"});
     } else {
       document.getElementById("recipe-content").textContent = "No recipe ID provided.";
+    }
+
+    function openMealPlanModal(recipeId) {
+      document.getElementById("mealplan-modal").classList.remove("hidden");
+      htmx.ajax("GET", "/user-mealplans?recipe_id=" + recipeId, {target: "#mealplan-list", swap: "innerHTML"});
     }
   </script>
 </body>
