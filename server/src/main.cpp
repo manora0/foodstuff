@@ -90,7 +90,6 @@ int main(void) {
   std::cout << "no ssl\n";
 #endif
 
-  // fixed: was missing sqlite3.h include and had bad if() syntax
   sqlite3* db;
   if (sqlite3_open_v2("../../data/recipies.db", &db,
     SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX, nullptr) != SQLITE_OK) {
@@ -99,11 +98,14 @@ int main(void) {
   }
 
   if (!svr.is_valid()) {
-    printf("server is not valid...\n");
+    printf("server is not valid... check keys\n");
     return -1;
   }
 
   svr.set_mount_point("/", "../../web/htmx");
+  svr.Get("/", [](const httplib::Request&, httplib::Response& res) {
+    res.set_redirect("/search/tags.html");
+  });
 
   register_user_routes(svr, db);
   register_recipe_routes(svr, db);
