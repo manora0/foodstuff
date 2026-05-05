@@ -54,7 +54,7 @@
             </select>
             <button @click="$dispatch('open-modal', { type: 'delete-plan' })"
                     class="bg-red-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-600">Delete Plan</button>
-            <button hx-post="/generate-grocery-list">create grocery list</button>
+            <button hx-post="/generate-grocery-list?id=1">create grocery list</button>
           </div>
             <div class="grid grid-cols-7 gap-3"
                  hx-get="/schedule-week" hx-trigger="plan-loaded from:body, change from:#plan-select"

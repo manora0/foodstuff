@@ -1,0 +1,4 @@
+recipe-scrapers
+cloudscraper
+beautifulsoup4
+pandas

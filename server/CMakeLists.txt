@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 add_definitions(-D_WIN32_WINNT=0x0A00)
 
 add_library(sqlite3 STATIC include/sqlite3.c)
-target_include_directories(server PUBLIC include)
+target_include_directories(sqlite3 PUBLIC include)
 
 add_executable(server src/main.cpp src/routes/user.cpp src/routes/auth.cpp src/routes/recipes.cpp)
 
