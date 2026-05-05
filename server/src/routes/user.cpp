@@ -303,23 +303,55 @@ void register_user_routes(httplib::Server& svr, sqlite3* db) {
 
 //================================================================================================================================================
 
-  // svr.Post("/generate-grocery-list", [db](const httplib::Request& req, httplib::Response& res) {
-  //   if (!req.has_param("user_id")) {res.status = 400; return;}
-  //   int plan_id = std::stoi(req.get_param_value("plan_id"));
+  svr.Get("/grocery-list", [db](const httplib::Request& req, httplib::Response& res) {
+    if (!req.has_param("plan_id")) { res.status = 400; return; }
+    int plan_id = std::stoi(req.get_param_value("plan_id"));
 
-  //   sqlite3_stmt* stmt;
-  //   sqlite3_prepare_v2(db, "insert into grocery_list (user_id) values (?)", -1, &stmt, nullptr);
-  //   sqlite3_bind_int(stmt, 1, user_id);
-  //   sqlite3_step(stmt);
-  //   sqlite3_finalize(stmt);
-  //   int list_id = (int)sqlite3_last_insert_rowid(db);
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(db, R"(
+      SELECT i.name, i.size, SUM(ri.quantity) as total_qty, ri.unit
+      FROM mealplan_schedule ms
+      JOIN recipe_ingredients ri ON ms.recipe_id = ri.recipe_id
+      JOIN ingredients i ON ri.ingredient_id = i.ingredient_id
+      WHERE ms.plan_id = ?
+      GROUP BY ri.ingredient_id, ri.unit
+      ORDER BY i.name
+    )", -1, &stmt, nullptr);
+    sqlite3_bind_int(stmt, 1, plan_id);
 
-  //   sqlite3_prepare_v2(db, R"(
-  //     select i.name, ri.unit, ri.quantity, r.title) from mealplan_schedule mp
-  //     join recipe r on mp.recipe_id = r.recipe_id
-  //     join recipe_ingredients ri on ri.recipe_id = r.recipe_id
-  //     join ingredient i on ri.ingredient_id = i.ingredient_id
-  //     group by r.title)", -1, stmt);
-  // });
-  
+    std::string html = "<ul class=\"space-y-2\">";
+    bool any = false;
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+      any = true;
+      const char* name_raw = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+      const char* size_raw = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+      const char* unit_raw = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+      double qty = sqlite3_column_double(stmt, 2);
+
+      std::string name = name_raw ? name_raw : "";
+      std::string size = size_raw ? size_raw : "";
+      std::string unit = unit_raw ? unit_raw : "";
+
+      char qty_buf[32];
+      if (qty > 0) snprintf(qty_buf, sizeof(qty_buf), "%g", qty);
+      else qty_buf[0] = '\0';
+
+      std::string label;
+      if (qty_buf[0]) label += std::string(qty_buf) + " ";
+      if (!unit.empty()) label += unit + " ";
+      if (!size.empty()) label += size + " ";
+      label += name;
+
+      html += "<li class=\"flex items-center gap-3 text-sm text-gray-700\">"
+              "<input type=\"checkbox\" class=\"w-4 h-4 accent-green-500\">"
+              "<span>" + label + "</span>"
+              "</li>";
+    }
+    sqlite3_finalize(stmt);
+
+    if (!any) html += "<li class=\"text-gray-400 text-sm\">No ingredients found — schedule some meals first.</li>";
+    html += "</ul>";
+    res.set_content(html, "text/html");
+  });
+
 }

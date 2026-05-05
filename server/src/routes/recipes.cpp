@@ -104,16 +104,16 @@ void register_recipe_routes(httplib::Server &svr, sqlite3 *db) {
             return v ? v : "";
         };
 
-        std::string name        = icol(0);
-        std::string size        = icol(1);
-        std::string unit        = icol(2);
+        std::string name = icol(0);
+        std::string size = icol(1);
+        std::string unit = icol(2);
         std::string preparation = icol(4);
         
 
         char qty_buf[32];
         double quantity = sqlite3_column_double(ing_stmt, 3);
         if (quantity != 1.0 && !unit.empty())
-          unit += "s";  // "2 teaspoons", "3 cups"
+          unit += "s"; 
         if (quantity > 0)
             snprintf(qty_buf, sizeof(qty_buf), "%g", quantity);
         else

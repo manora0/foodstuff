@@ -54,7 +54,8 @@
             </select>
             <button @click="$dispatch('open-modal', { type: 'delete-plan' })"
                     class="bg-red-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-600">Delete Plan</button>
-            <button hx-post="/generate-grocery-list?id=1">create grocery list</button>
+            <button hx-get="/grocery-list" hx-include="#plan-select" hx-target="#grocery-list-content" hx-swap="innerHTML"
+                    class="bg-green-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-green-600">Grocery List</button>
           </div>
             <div class="grid grid-cols-7 gap-3"
                  hx-get="/schedule-week" hx-trigger="plan-loaded from:body, change from:#plan-select"
@@ -137,6 +138,36 @@
                </div>
           </div>
     </div>
+    <div x-data="{open: false}" @open-grocery.window="open = true">
+        <div x-show="open" x-transition.opacity.duration.300ms
+             class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
+             @click="open = false">
+            <div class="bg-white rounded-xl shadow-lg p-6 w-96 max-h-[80vh] flex flex-col" @click.stop>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-800">Grocery List</h2>
+                    <button @click="open = false" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                </div>
+                <div id="grocery-list-content" class="overflow-y-auto"
+                     hx-on:htmx:after-swap="window.dispatchEvent(new CustomEvent('open-grocery')); restoreGroceryChecks()"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function restoreGroceryChecks() {
+            const checked = JSON.parse(localStorage.getItem('grocery-checked') || '[]');
+            document.querySelectorAll('#grocery-list-content input[type=checkbox]').forEach(cb => {
+                const label = cb.nextElementSibling?.textContent;
+                if (label && checked.includes(label)) cb.checked = true;
+                cb.addEventListener('change', () => {
+                    const all = JSON.parse(localStorage.getItem('grocery-checked') || '[]');
+                    const set = new Set(all);
+                    if (cb.checked) set.add(label); else set.delete(label);
+                    localStorage.setItem('grocery-checked', JSON.stringify([...set]));
+                });
+            });
+        }
+    </script>
     <script>
         (function () {
             const hour = new Date().getHours();
@@ -151,7 +182,6 @@
                 Dinner:    { bg: '#e0e7ff', ring: '#818cf8' },
             };
 
-            // JS getDay: 0=Sun,1=Mon...6=Sat → data-day: 1=Mon...6=Sat,7=Sun
             const jsDay = new Date().getDay();
             const dataDay = jsDay === 0 ? 7 : jsDay;
             const header = document.querySelector(`[data-day="${dataDay}"]`);
