@@ -1,4 +1,5 @@
 #include "user.hpp"
+#include <map>
 
 void register_user_routes(httplib::Server& svr, sqlite3* db) {
 //================================================================================================================================================
@@ -119,9 +120,9 @@ void register_user_routes(httplib::Server& svr, sqlite3* db) {
       if (!image_url.empty())
         
       html += "<div id=\"cell-" + std::to_string(plan_id) + "-" + std::to_string(day) +
-      "-" + meal_type + "\">"
+      "-" + meal_type + "\" class=\"flex flex-col h-full\">"
           "<div class=\"relative group\">"
-          "<img src=\"" + image_url + "\" class=\"w-full rounded mb-1 object-cover h-12\">"
+          "<img src=\"" + image_url + "\" class=\"w-full object-cover h-14 rounded-t-lg\">"
           "<button @click=\"$dispatch('open-modal', {type: 'remove-recipe', recipe_id: " +
       std::to_string(recipe_id) +
           ", plan_id: " + std::to_string(plan_id) +
@@ -131,13 +132,81 @@ void register_user_routes(httplib::Server& svr, sqlite3* db) {
       "-" + meal_type + "'})\""
           " class=\"absolute top-0 right-0 bg-red-500 text-white text-xs px-1 rounded-bl opacity-0 group-hover:opacity-100\">X</button>"
           "</div>"
+          "<div class=\"px-2 py-1\">"
           "<a href=\"/recipe/recipe.html?id=" + std::to_string(recipe_id) +
           "\" class=\"text-xs text-blue-500 hover:underline font-medium leading-tight\">" + title + "</a>"
+          "</div>"
           "</div>";
     } else {
-      html += "<p class=\"text-xs text-gray-300 italic\">Empty</p>";
+      html += "<p class=\"text-xs text-gray-300 italic p-2\">Empty</p>";
     }
     sqlite3_finalize(stmt);
+    res.set_content(html, "text/html");
+  });
+
+//================================================================================================================================================
+
+  svr.Get("/schedule-week", [db](const httplib::Request& req, httplib::Response& res) {
+    if (!req.has_param("plan_id")) { res.status = 400; return; }
+    std::string plan_id_str = req.get_param_value("plan_id");
+    if (plan_id_str.empty()) { res.status = 400; return; }
+    int plan_id = std::stoi(plan_id_str);
+
+    // Fetch all scheduled meals for this plan in one query
+    struct SlotData { int day; std::string meal_type, title, image_url; int recipe_id; };
+    std::map<std::pair<int,std::string>, SlotData> slots;
+
+    sqlite3_stmt* stmt;
+    sqlite3_prepare_v2(db, R"(
+      SELECT ms.day, ms.meal_type, r.title, r.image_url, r.recipe_id
+      FROM mealplan_schedule ms
+      JOIN recipe r ON ms.recipe_id = r.recipe_id
+      WHERE ms.plan_id = ?
+    )", -1, &stmt, nullptr);
+    sqlite3_bind_int(stmt, 1, plan_id);
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+      SlotData s;
+      s.day        = sqlite3_column_int(stmt, 0);
+      s.meal_type  = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+      s.title      = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+      const char* img = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+      s.image_url  = img ? img : "";
+      s.recipe_id  = sqlite3_column_int(stmt, 4);
+      slots[{s.day, s.meal_type}] = s;
+    }
+    sqlite3_finalize(stmt);
+
+    const char* meals[] = {"Breakfast", "Lunch", "Dinner"};
+    std::string html;
+    for (int day = 1; day <= 7; day++) {
+      for (const char* meal : meals) {
+        std::string slot_id = "slot-" + std::to_string(day) + "-" + meal;
+        html += "<div id=\"" + slot_id + "\" hx-swap-oob=\"innerHTML\">";
+        auto it = slots.find({day, meal});
+        if (it != slots.end()) {
+          const SlotData& s = it->second;
+          std::string cell_id = "cell-" + std::to_string(plan_id) + "-" + std::to_string(day) + "-" + meal;
+          html += "<div id=\"" + cell_id + "\" class=\"flex flex-col h-full\">"
+                  "<div class=\"relative group\">"
+                  "<img src=\"" + s.image_url + "\" class=\"w-full object-cover h-14 rounded-t-lg\">"
+                  "<button @click=\"$dispatch('open-modal', {type: 'remove-recipe', recipe_id: " + std::to_string(s.recipe_id) +
+                  ", plan_id: " + std::to_string(plan_id) +
+                  ", day: " + std::to_string(day) +
+                  ", meal: '" + meal +
+                  "', cell: '" + cell_id + "'})\""
+                  " class=\"absolute top-0 right-0 bg-red-500 text-white text-xs px-1 rounded-bl opacity-0 group-hover:opacity-100\">X</button>"
+                  "</div>"
+                  "<div class=\"px-2 py-1\">"
+                  "<a href=\"/recipe/recipe.html?id=" + std::to_string(s.recipe_id) +
+                  "\" class=\"text-xs text-blue-500 hover:underline font-medium leading-tight\">" + s.title + "</a>"
+                  "</div>"
+                  "</div>";
+        } else {
+          html += "<p class=\"text-xs text-gray-300 italic p-2\">Empty</p>";
+        }
+        html += "</div>";
+      }
+    }
     res.set_content(html, "text/html");
   });
 

@@ -56,83 +56,64 @@
                     class="bg-red-500 text-white px-3 py-2 rounded-lg text-sm hover:bg-red-600">Delete Plan</button>
             <button hx-post="/generate-grocery-list">create grocery list</button>
           </div>
-            <div class="grid grid-cols-7 gap-3">
+            <div class="grid grid-cols-7 gap-3"
+                 hx-get="/schedule-week" hx-trigger="plan-loaded from:body, change from:#plan-select"
+                 hx-include="#plan-select" hx-swap="none">
 
                 <!-- Monday -->
                 <div class="flex flex-col gap-2">
-                    <h3 class="text-sm font-semibold text-gray-500 text-center">Mon</h3>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=1&meal=Breakfast" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Breakfast</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=1&meal=Lunch" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Lunch</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=1&meal=Dinner" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Dinner</div>
+                    <h3 data-day="1" class="text-sm font-semibold text-gray-500 text-center">Mon</h3>
+                    <div id="slot-1-Breakfast" data-meal="Breakfast" class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Breakfast</div>
+                    <div id="slot-1-Lunch"     data-meal="Lunch"     class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Lunch</div>
+                    <div id="slot-1-Dinner"    data-meal="Dinner"    class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Dinner</div>
                 </div>
 
                 <!-- Tuesday -->
                 <div class="flex flex-col gap-2">
-                    <h3 class="text-sm font-semibold text-gray-500 text-center">Tue</h3>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=2&meal=Breakfast" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Breakfast</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=2&meal=Lunch" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Lunch</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=2&meal=Dinner" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Dinner</div>
+                    <h3 data-day="2" class="text-sm font-semibold text-gray-500 text-center">Tue</h3>
+                    <div id="slot-2-Breakfast" data-meal="Breakfast" class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Breakfast</div>
+                    <div id="slot-2-Lunch"     data-meal="Lunch"     class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Lunch</div>
+                    <div id="slot-2-Dinner"    data-meal="Dinner"    class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Dinner</div>
                 </div>
 
                 <!-- Wednesday -->
                 <div class="flex flex-col gap-2">
-                    <h3 class="text-sm font-semibold text-gray-500 text-center">Wed</h3>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=3&meal=Breakfast" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Breakfast</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=3&meal=Lunch" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Lunch</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=3&meal=Dinner" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Dinner</div>
+                    <h3 data-day="3" class="text-sm font-semibold text-gray-500 text-center">Wed</h3>
+                    <div id="slot-3-Breakfast" data-meal="Breakfast" class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Breakfast</div>
+                    <div id="slot-3-Lunch"     data-meal="Lunch"     class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Lunch</div>
+                    <div id="slot-3-Dinner"    data-meal="Dinner"    class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Dinner</div>
                 </div>
 
                 <!-- Thursday -->
                 <div class="flex flex-col gap-2">
-                    <h3 class="text-sm font-semibold text-gray-500 text-center">Thu</h3>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=4&meal=Breakfast" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Breakfast</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=4&meal=Lunch" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Lunch</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=4&meal=Dinner" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Dinner</div>
+                    <h3 data-day="4" class="text-sm font-semibold text-gray-500 text-center">Thu</h3>
+                    <div id="slot-4-Breakfast" data-meal="Breakfast" class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Breakfast</div>
+                    <div id="slot-4-Lunch"     data-meal="Lunch"     class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Lunch</div>
+                    <div id="slot-4-Dinner"    data-meal="Dinner"    class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Dinner</div>
                 </div>
 
                 <!-- Friday -->
                 <div class="flex flex-col gap-2">
-                    <h3 class="text-sm font-semibold text-gray-500 text-center">Fri</h3>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=5&meal=Breakfast" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Breakfast</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=5&meal=Lunch" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Lunch</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=5&meal=Dinner" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Dinner</div>
+                    <h3 data-day="5" class="text-sm font-semibold text-gray-500 text-center">Fri</h3>
+                    <div id="slot-5-Breakfast" data-meal="Breakfast" class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Breakfast</div>
+                    <div id="slot-5-Lunch"     data-meal="Lunch"     class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Lunch</div>
+                    <div id="slot-5-Dinner"    data-meal="Dinner"    class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Dinner</div>
                 </div>
 
                 <!-- Saturday -->
                 <div class="flex flex-col gap-2">
-                    <h3 class="text-sm font-semibold text-gray-500 text-center">Sat</h3>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=6&meal=Breakfast" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Breakfast</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=6&meal=Lunch" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Lunch</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=6&meal=Dinner" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Dinner</div>
+                    <h3 data-day="6" class="text-sm font-semibold text-gray-500 text-center">Sat</h3>
+                    <div id="slot-6-Breakfast" data-meal="Breakfast" class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Breakfast</div>
+                    <div id="slot-6-Lunch"     data-meal="Lunch"     class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Lunch</div>
+                    <div id="slot-6-Dinner"    data-meal="Dinner"    class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Dinner</div>
                 </div>
 
                 <!-- Sunday -->
                 <div class="flex flex-col gap-2">
-                    <h3 class="text-sm font-semibold text-gray-500 text-center">Sun</h3>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=7&meal=Breakfast" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Breakfast</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=7&meal=Lunch" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Lunch</div>
-                    <div class="bg-gray-50 rounded-lg p-2 min-h-16 text-xs text-gray-400"
-                         hx-get="/schedule?day=7&meal=Dinner" hx-trigger="plan-loaded from:body, change from:#plan-select" hx-include="#plan-select">Dinner</div>
+                    <h3 data-day="7" class="text-sm font-semibold text-gray-500 text-center">Sun</h3>
+                    <div id="slot-7-Breakfast" data-meal="Breakfast" class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Breakfast</div>
+                    <div id="slot-7-Lunch"     data-meal="Lunch"     class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Lunch</div>
+                    <div id="slot-7-Dinner"    data-meal="Dinner"    class="bg-gray-50 rounded-lg min-h-28 overflow-hidden text-xs text-gray-400">Dinner</div>
                 </div>
 
             </div>
@@ -158,5 +139,34 @@
                </div>
           </div>
     </div>
+    <script>
+        (function () {
+            const hour = new Date().getHours();
+            let meal;
+            if (hour >= 6 && hour < 12) meal = 'Breakfast';
+            else if (hour >= 12 && hour < 17) meal = 'Lunch';
+            else meal = 'Dinner';
+
+            const mealStyles = {
+                Breakfast: { bg: '#fef9c3', ring: '#facc15' },
+                Lunch:     { bg: '#dcfce7', ring: '#4ade80' },
+                Dinner:    { bg: '#e0e7ff', ring: '#818cf8' },
+            };
+
+            // JS getDay: 0=Sun,1=Mon...6=Sat → data-day: 1=Mon...6=Sat,7=Sun
+            const jsDay = new Date().getDay();
+            const dataDay = jsDay === 0 ? 7 : jsDay;
+            const header = document.querySelector(`[data-day="${dataDay}"]`);
+            if (header) {
+                header.style.color = '#16a34a';
+                header.style.fontWeight = '700';
+                const cell = header.closest('.flex.flex-col').querySelector(`[data-meal="${meal}"]`);
+                if (cell) {
+                    cell.style.backgroundColor = mealStyles[meal].bg;
+                    cell.style.outline = `2px solid ${mealStyles[meal].ring}`;
+                }
+            }
+        })();
+    </script>
 </body>
 </html>

@@ -4,15 +4,44 @@
   <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
     integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
     crossorigin="anonymous"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Recipes by Tag</title>
-      <a href="/user/profile.html?id=1" class="text-sm text-blue-500 hover:underline mb-6 inline-block">&larr; profile</a>
-
+  
 </head>
-<body>
-  <h1>Recipes by Tag</h1>
-  <div id="tags" hx-get="/keywords" hx-trigger="load" hx-swap="innerHTML"></div>
-  <ul id="recipe-list"></ul>
+<body class="bg-gray-50 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-10">
+
+    <a href="/user/profile.html?id=1" class="text-sm text-blue-500 hover:underline mb-6 inline-block">&larr; Profile</a>
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-gray-800 mb-8">Recipe Search</h1>
+
+      <label class="cursor-default flex-shrink-0 group h-5 inline-flex items-center justify-center relative w-10">
+        <input type="checkbox" class="hidden peer absolute border-none h-5 rounded w-10 checked:border-0 checked:bg-transparent checked:focus:bg-transparent checked:hover:bg-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" name="foo" value="bar">
+        <span class="peer-checked:bg-blue-500 absolute bg-gray-200 duration-200 ease-in-out h-4 mx-auto pointer-events-none rounded-full transition-colors w-9"></span>
+        <span class="peer-checked:translate-x-5 absolute bg-white border border-gray-200 duration-200 ease-in-out h-5 inline-block left-0 pointer-events-none ring-0 rounded-full shadow transform transition-transform translate-x-0 w-5 "></span>
+      </label>
+    </div>
+    <section class="bg-white rounded-xl shadow p-6 mb-8">
+      <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Tags</h2>
+      <div id="tags" class="flex flex-wrap gap-2"
+           hx-get="/keywords" hx-trigger="load" hx-swap="innerHTML"></div>
+    </section>
+
+    <section class="bg-white rounded-xl shadow p-6 mb-8">
+      <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Tags</h2>
+      <div id="tags" class="flex flex-wrap gap-2"
+            hx-trigger="load" hx-swap="innerHTML">
+          <p x-data="{colored : false}" @click="colored = !colored" :class="colored ? 'text-green-600' : 'text-gray-400'">Very awesome</p>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Recipes</h2>
+      <ul id="recipe-list" class="divide-y divide-gray-100"></ul>
+    </section>
+
+  </div>
 </body>
 </html>

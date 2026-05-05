@@ -161,11 +161,11 @@ int main(void) {
         int id = sqlite3_column_int(stmt, 0);
         std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
         html += "<button "
-                "class=\"tag-btn\" "
+                "class=\"bg-green-100 text-green-700 hover:bg-green-500 hover:text-white px-3 py-1 rounded-full text-sm font-medium transition-colors cursor-pointer\" "
                 "hx-get=\"/recipes-by-keyword?id=" + std::to_string(id) + "\" "
                 "hx-target=\"#recipe-list\" "
                 "hx-swap=\"innerHTML\">"
-                + name + 
+                + name +
                 "</button>\n";
     }
     sqlite3_finalize(stmt);
@@ -188,7 +188,7 @@ int main(void) {
     while (sqlite3_step(stmt) == SQLITE_ROW) {
       std::string title = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
       std::string recipe_id = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-      html += "<li><a href=\"recipe.html?id=" + recipe_id + "\" target=\"_blank\">" + title + "</a></li>\n";
+      html += "<li class=\"py-3\"><a href=\"recipe.html?id=" + recipe_id + "\" class=\"text-gray-800 hover:text-green-600 hover:underline font-medium\">" + title + "</a></li>\n";
     }
     sqlite3_finalize(stmt);
     res.set_content(html, "text/html");
