@@ -7,6 +7,11 @@ void register_recipe_routes(httplib::Server &svr, sqlite3 *db) {
       res.status = 400;
       return;
     }
+    int simple = 0;
+    if (req.has_param("simple")) {
+      simple = std::stoi(req.get_param_value("simple")) == 1 ? 1 : 0;
+    }
+
     int id = std::stoi(req.get_param_value("id"));
 
     sqlite3_stmt *stmt;
@@ -49,13 +54,13 @@ void register_recipe_routes(httplib::Server &svr, sqlite3 *db) {
               "mb-6\">";
     html += "<h1 class=\"text-3xl font-bold text-gray-800 mb-2\">" + title +
             "</h1>";
-    if (!desc.empty())
+    if (!desc.empty() && !simple)
       html += "<p class=\"text-gray-600 mb-4\">" + desc + "</p>";
     html += "<div class=\"flex flex-wrap gap-3 text-sm text-gray-500 mb-6\">";
-    if (!category.empty())
+    if (!category.empty() && !simple)
       html += "<span class=\"bg-gray-100 px-3 py-1 rounded-full\">" + category +
               "</span>";
-    if (!cuisine.empty())
+    if (!cuisine.empty() && !simple)
       html += "<span class=\"bg-gray-100 px-3 py-1 rounded-full\">" + cuisine +
               "</span>";
     if (!time.empty())
@@ -64,20 +69,22 @@ void register_recipe_routes(httplib::Server &svr, sqlite3 *db) {
     if (!yields.empty())
       html += "<span class=\"bg-gray-100 px-3 py-1 rounded-full\">&#x1F37D; " +
               yields + "</span>";
-    if (!ratings.empty())
+    if (!ratings.empty() && !simple)
       html += "<span class=\"bg-gray-100 px-3 py-1 rounded-full\">&#x2605; " +
               ratings + "</span>";
     html += "</div>";
-    if (!author.empty())
+    if (!author.empty() && !simple)
       html += "<p class=\"text-sm text-gray-400 mb-4\">By " + author + "</p>";
     if (!url.empty())
       html += "<a href=\"" + url +
               "\" class=\"inline-block text-blue-500 hover:underline "
               "text-sm\">View original recipe &rarr;</a>";
-
+    if (!simple) {
     html += "<button onclick=\"openMealPlanModal(" + std::to_string(id) + ")\" "
             "class=\"mt-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 text-sm\">+ Add to Meal Plan</button>";
-
+    } else {
+      html += "<a href=\"../recipe/recipe.html?id=" + std::to_string(id) + "\" class=\"inline-block text-blue-500 hover:underline text-sm\"> View recipe &rarr;</a>";
+    }
     html += "<h2 class=\"text-xl font-semibold text-gray-700 mt-6 mb-3\">Ingredients</h2>";
 
     sqlite3_stmt* ing_stmt;
@@ -207,7 +214,7 @@ void register_recipe_routes(httplib::Server &svr, sqlite3 *db) {
         "<option value=\"Dinner\">Dinner</option>"
         "</select>"
         "<div id=\"slot-preview\"></div>"
-        "<button type=\"submit\" class=\"bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600\">Add</button>"
+        "<button id=\"add-slot-btn\" type=\"submit\" class=\"bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed\">Add</button>"
         "</form>";
 
     sqlite3_stmt* sched_stmt;
@@ -273,12 +280,19 @@ void register_recipe_routes(httplib::Server &svr, sqlite3 *db) {
     sqlite3_bind_text(stmt, 3, meal_time.c_str(), -1, SQLITE_TRANSIENT);
 
     std::string html;
+    bool occupied = false;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         const char* title = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
         html += "<p class=\"text-xs text-amber-600 bg-amber-50 rounded px-2 py-1\">"
                 "&#9432; " + std::string(title ? title : "") + " is already scheduled here</p>";
+        occupied = true;
     }
     sqlite3_finalize(stmt);
+
+    std::string btn_state = occupied ? "disabled" : "";
+    html += "<button id=\"add-slot-btn\" type=\"submit\" " + btn_state + " hx-swap-oob=\"true\""
+            " class=\"bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed\">Add</button>";
+
     res.set_content(html, "text/html");
   });
 

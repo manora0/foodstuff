@@ -9,7 +9,7 @@ add_definitions(-D_WIN32_WINNT=0x0A00)
 add_library(sqlite3 STATIC include/sqlite3.c)
 target_include_directories(sqlite3 PUBLIC include)
 
-add_executable(server src/main.cpp src/routes/user.cpp src/routes/auth.cpp src/routes/recipes.cpp)
+add_executable(server src/main.cpp src/routes/user.cpp src/routes/auth.cpp src/routes/recipes.cpp src/routes/search.cpp)
 
 target_include_directories(server PRIVATE include)
 

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"
+    integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipes by Tag</title>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div class="max-w-4xl mx-auto px-4 py-10">
+
+    <a href="/user/profile.html?id=1" class="text-sm text-blue-500 hover:underline mb-6 inline-block">&larr; Profile</a>
+
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Recipe Search</h1>
+      <div class="flex rounded-lg overflow-hidden border border-gray-200 text-sm">
+        <button onclick="showPanel('tags')" id="tab-tags"
+          class="px-4 py-2 bg-green-500 text-white font-medium">Tags</button>
+        <button onclick="showPanel('cuisine')" id="tab-cuisine"
+          class="px-4 py-2 bg-white text-gray-600 hover:bg-gray-50 font-medium">Cuisine</button>
+        <button onclick="showPanel('category')" id="tab-category"
+          class="px-4 py-2 bg-white text-gray-600 hover:bg-gray-50 font-medium">Category</button>
+      </div>
+    </div>
+
+    <section id="panel-tags" class="bg-white rounded-xl shadow p-6 mb-8">
+      <div class="flex flex-wrap gap-2"
+           hx-get="/keywords" hx-trigger="load" hx-swap="innerHTML"></div>
+    </section>
+
+    <section id="panel-cuisine" class="hidden bg-white rounded-xl shadow p-6 mb-8">
+      <div class="flex flex-wrap gap-2"
+           hx-get="/cuisines" hx-trigger="load" hx-swap="innerHTML"></div>
+    </section>
+
+    <section id="panel-category" class="hidden bg-white rounded-xl shadow p-6 mb-8">
+      <div class="flex flex-wrap gap-2"
+           hx-get="/categories" hx-trigger="load" hx-swap="innerHTML"></div>
+    </section>
+
+    <section class="bg-white rounded-xl shadow p-6">
+      <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">Recipes</h2>
+      <ul id="recipe-list" class="divide-y divide-gray-100"></ul>
+    </section>
+
+  </div>
+  <script>
+    const panels = ['tags', 'cuisine', 'category'];
+    const colors = { tags: 'bg-green-500', cuisine: 'bg-blue-500', category: 'bg-purple-500' };
+
+    function showPanel(name) {
+      panels.forEach(p => {
+        document.getElementById('panel-' + p).classList.toggle('hidden', p !== name);
+        const tab = document.getElementById('tab-' + p);
+        const active = p === name;
+        tab.className = 'px-4 py-2 font-medium ' + (active ? colors[p] + ' text-white' : 'bg-white text-gray-600 hover:bg-gray-50');
+      });
+    }
+  </script>
+</body>
+</html>

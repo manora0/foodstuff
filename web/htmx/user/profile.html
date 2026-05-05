@@ -10,7 +10,7 @@
 <body class="bg-gray-50 min-h-screen" x-data>
     <div class="max-w-6xl mx-auto px-4 py-10">
         <h1 class="text-3xl font-bold text-gray-800 mb-8">Profile</h1>
-         <a href="/recipe/tags.html" class="text-sm text-blue-500 hover:underline mb-6 inline-block">&larr; Back</a>
+         <a href="/search/tags.html" class="text-sm text-blue-500 hover:underline mb-6 inline-block">&larr; Back</a>
 
 
         <!-- Plan and collection creation -->
@@ -118,9 +118,7 @@
 
             </div>
         </section>
-        <section class="bg-white rounded-xl shadow p-6">
-          <div class="grid-rows-none"></div>
-        </section>
+        <div id="recipe-detail-panel" class="mt-6"></div>
     </div>
 
     <div x-data="{modal:false, detail:{}}" @open-modal.window="modal=true; detail=$event.detail">

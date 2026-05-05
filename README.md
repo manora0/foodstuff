@@ -34,7 +34,7 @@ The server uses openSSL which requires SSL keys. Since there is no certified dom
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
 ```
 
-> [!WARNING]
+> [!Info]
  Your browser will warn you that the domain is dangerous because the keys are self signed. Since the keys were signed by us there is no problem. Click advanced and proceed to the webpage
 
 #### SQLite
@@ -53,7 +53,7 @@ pip install -r requirements
 
 # run import script
 python ./import.py
-# run if you want to re-scrape the data (TAKES ABOUT 8 MINUTES TO A LONG TIME)
+# run if you want to re-scrape the data (TAKES IN BETWEEN 8 MINUTES AND A LONG TIME)
 python ./import.py --scrape
 ```
 

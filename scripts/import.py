@@ -6,11 +6,11 @@ from bs4 import BeautifulSoup
 import json
 import argparse
 
-# database_path = './../data/recipes.db'
-# data_path = './../data/dump/meal_dump.json'
+database_path = './../data/recipes.db'
+data_path = './../data/dump/meal_dump.json'
 
-database_path = 'recipes.db'
-data_path = 'meal_dump.json'
+# database_path = 'recipes.db'
+# data_path = 'meal_dump.json'
 website = 'https://www.americastestkitchen.com'
 
 

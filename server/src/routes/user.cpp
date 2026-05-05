@@ -197,8 +197,9 @@ void register_user_routes(httplib::Server& svr, sqlite3* db) {
                   " class=\"absolute top-0 right-0 bg-red-500 text-white text-xs px-1 rounded-bl opacity-0 group-hover:opacity-100\">X</button>"
                   "</div>"
                   "<div class=\"px-2 py-1\">"
-                  "<a href=\"/recipe/recipe.html?id=" + std::to_string(s.recipe_id) +
-                  "\" class=\"text-xs text-blue-500 hover:underline font-medium leading-tight\">" + s.title + "</a>"
+                  "<a hx-get=\"/recipe-detail?id=" + std::to_string(s.recipe_id) + "&simple=1" +
+                  "\" hx-target=\"#recipe-detail-panel\" hx-swap=\"innerHTML\""
+                  " class=\"text-xs text-blue-500 hover:underline font-medium leading-tight cursor-pointer\">" + s.title + "</a>"
                   "</div>"
                   "</div>";
         } else {
@@ -302,23 +303,23 @@ void register_user_routes(httplib::Server& svr, sqlite3* db) {
 
 //================================================================================================================================================
 
-  svr.Post("/generate-grocery-list", [db](const httplib::Request& req, httplib::Response& res) {
-    if (!req.has_param("user_id")) {res.status = 400; return;}
-    int plan_id = std::stoi(req.get_param_value("plan_id"));
+  // svr.Post("/generate-grocery-list", [db](const httplib::Request& req, httplib::Response& res) {
+  //   if (!req.has_param("user_id")) {res.status = 400; return;}
+  //   int plan_id = std::stoi(req.get_param_value("plan_id"));
 
-    sqlite3_stmt* stmt;
-    sqlite3_prepare_v2(db, "insert into grocery_list (user_id) values (?)", -1, &stmt, nullptr);
-    sqlite3_bind_int(stmt, 1, user_id);
-    sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-    int list_id = (int)sqlite3_last_insert_rowid(db);
+  //   sqlite3_stmt* stmt;
+  //   sqlite3_prepare_v2(db, "insert into grocery_list (user_id) values (?)", -1, &stmt, nullptr);
+  //   sqlite3_bind_int(stmt, 1, user_id);
+  //   sqlite3_step(stmt);
+  //   sqlite3_finalize(stmt);
+  //   int list_id = (int)sqlite3_last_insert_rowid(db);
 
-    sqlite3_prepare_v2(db, R"(
-      select i.name, ri.unit, ri.quantity, r.title) from mealplan_schedule mp
-      join recipe r on mp.recipe_id = r.recipe_id
-      join recipe_ingredients ri on ri.recipe_id = r.recipe_id
-      join ingredient i on ri.ingredient_id = i.ingredient_id
-      group by r.title)", -1, stmt);
-  });
+  //   sqlite3_prepare_v2(db, R"(
+  //     select i.name, ri.unit, ri.quantity, r.title) from mealplan_schedule mp
+  //     join recipe r on mp.recipe_id = r.recipe_id
+  //     join recipe_ingredients ri on ri.recipe_id = r.recipe_id
+  //     join ingredient i on ri.ingredient_id = i.ingredient_id
+  //     group by r.title)", -1, stmt);
+  // });
   
 }
